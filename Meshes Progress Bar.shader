@@ -1,6 +1,6 @@
-﻿//  Copyright 2019 Arthur Anisimov. anisimov.arthur@gmail.com
+//  Copyright 2019 Arthur Anisimov. https://github.com/ArchieQQ
 
-Shader "Custom/Meshes Progress Bar"
+Shader "Meshes Progress Bar"
 {
 	Properties
 	{		
@@ -28,12 +28,11 @@ Shader "Custom/Meshes Progress Bar"
 			#include "UnityLightingCommon.cginc"
 
 			#pragma multi_compile_fwdbase nolightmap nodirlightmap nodynlightmap novertexlight
-			#pragma multi_compile_fog
 
 			#include "AutoLight.cginc"
 
 			struct appdata {
-				float4 pos : POSITION;
+				float4 vertex : POSITION;
 				float2 uv : TEXCOORD0;
 				float3 normal : NORMAL;
 			};
@@ -48,7 +47,6 @@ Shader "Custom/Meshes Progress Bar"
 				fixed3 ambient : COLOR1;
 
 				SHADOW_COORDS(2)
-				UNITY_FOG_COORDS(2)
 			};
 
 			
@@ -56,8 +54,8 @@ Shader "Custom/Meshes Progress Bar"
 			{
 				v2f o;
 				UNITY_INITIALIZE_OUTPUT(v2f, o);
-				o.worldPos = mul(unity_ObjectToWorld, v.pos);
-				o.pos = UnityObjectToClipPos(v.pos);
+				o.worldPos = mul(unity_ObjectToWorld, v.vertex);
+				o.pos = UnityObjectToClipPos(v.vertex);
 				o.uv = v.uv;
 
 				/* Diffuse */
@@ -65,10 +63,7 @@ Shader "Custom/Meshes Progress Bar"
 				half3 worldNormal = UnityObjectToWorldNormal(v.normal);
 				half nl = max(1 - diffuseIntensivity, dot(worldNormal, _WorldSpaceLightPos0.xyz));
 				o.diff = nl * _LightColor0;
-				o.diff.rgb += ShadeSH9(half4(worldNormal, 1));
-
-				/* Fog */
-				UNITY_TRANSFER_FOG(o, o.pos);
+				o.ambient = ShadeSH9(half4(worldNormal, 1));
 
 				/* Shadows */
 				TRANSFER_SHADOW(o)
@@ -90,12 +85,7 @@ Shader "Custom/Meshes Progress Bar"
 				/* Shadows */
 				fixed shadow = SHADOW_ATTENUATION(i);
 				fixed3 lighting = i.diff * shadow  + i.ambient;
-				col.rgb *= lighting;
-
-				/* Fog */
-				UNITY_APPLY_FOG(i.fogCoord, col);
-				UNITY_OPAQUE_ALPHA(col.a);
-				
+				col.rgb *= lighting;				
 
 				/* Mesh Bar Color */
 				if (_PlayerPos < i.worldPos.x)
@@ -106,6 +96,6 @@ Shader "Custom/Meshes Progress Bar"
 
 			ENDCG
 		}
-			 UsePass "Legacy Shaders/VertexLit/SHADOWCASTER"
+			UsePass "Legacy Shaders/VertexLit/SHADOWCASTER"
 	}
 }
