@@ -7,6 +7,8 @@ Fills meshes with color.
 + Cast shadows;
 + Receive shadows.
 
-![Alt Text](https://media.giphy.com/media/kPmdiIij5AEi4yXyq1/giphy.gif)
+![Preview1](https://media.giphy.com/media/kPmdiIij5AEi4yXyq1/giphy.gif)
 
-![alt text](https://pp.userapi.com/c847016/v847016947/1ddf09/Z17Jr7KP98E.jpg)
+![Shader in action](https://thumbs.gfycat.com/UnfinishedWickedFlamingo.webp)
+
+![Editor preview](https://pp.userapi.com/c847016/v847016947/1ddf09/Z17Jr7KP98E.jpg)
